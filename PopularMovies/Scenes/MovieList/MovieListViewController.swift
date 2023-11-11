@@ -24,6 +24,7 @@ final class MovieListViewController: BaseViewController {
         super.viewDidLoad()
         setupViewModel()
         setupView()
+        listenObservables()
     }
     
     // MARK: - Methods
@@ -42,16 +43,23 @@ final class MovieListViewController: BaseViewController {
         }
         movieListTableView.register(MovieListTableViewCell.self,
                                    forCellReuseIdentifier: MovieListTableViewCell.cellID)
+        viewModel.getPopularMovieListData()
+    }
+    
+    private func listenObservables() {
         viewModel.movieListObservable
             .bind(to: movieListTableView.rx.items(cellIdentifier: "MovieListTableViewCell",
                                                   cellType: MovieListTableViewCell.self)) { index, element, cell in
                 cell.updateUI(with: element)
             }
             .disposed(by: disposeBag)
-        movieListTableView.rx
-            .modelSelected(MovieListTableViewCell.self)
-            .subscribe(onNext: { movie in
-                print("Selected movie: \(movie)")
+        Observable.combineLatest(movieListTableView.rx.itemSelected, viewModel.movieListObservable)
+            .subscribe(onNext: { [weak self] (indexPath, movies: [MovieDetailModel]) in
+                guard let self = self else { return }
+                let movieDetailViewController = MovieDetailViewController()
+                let movieDetailViewModel = MovieDetailViewModel(movie: movies[indexPath.row])
+                movieDetailViewController.setupViewModel(movieDetailViewModel)
+                self.navigationController?.pushViewController(movieDetailViewController, animated: true)
             })
             .disposed(by: disposeBag)
         Observable.combineLatest(movieListTableView.rx.willDisplayCell, viewModel.movieListObservable)
@@ -66,6 +74,5 @@ final class MovieListViewController: BaseViewController {
                 }
             }
             .disposed(by: disposeBag)
-        viewModel.getPopularMovieListData()
     }
 }
