@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		03364CE3481390AEDD54EF5A /* Pods_PopularMovies.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 238E470C5196CDC39CD6054D /* Pods_PopularMovies.framework */; };
+		E721CD142B00018C00932DA6 /* ScrollableStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E721CD132B00018C00932DA6 /* ScrollableStackView.swift */; };
 		E7F35AF92AFFA79C00E47520 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F35AF82AFFA79C00E47520 /* AppDelegate.swift */; };
 		E7F35AFB2AFFA79C00E47520 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F35AFA2AFFA79C00E47520 /* SceneDelegate.swift */; };
 		E7F35AFD2AFFA79C00E47520 /* MovieListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F35AFC2AFFA79C00E47520 /* MovieListViewController.swift */; };
@@ -31,6 +32,7 @@
 		238E470C5196CDC39CD6054D /* Pods_PopularMovies.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PopularMovies.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		30F04C7EF5CA5ECF136C5CB1 /* Pods-PopularMovies.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PopularMovies.release.xcconfig"; path = "Target Support Files/Pods-PopularMovies/Pods-PopularMovies.release.xcconfig"; sourceTree = "<group>"; };
 		4F33137322C469C8092A7BCF /* Pods-PopularMovies.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PopularMovies.debug.xcconfig"; path = "Target Support Files/Pods-PopularMovies/Pods-PopularMovies.debug.xcconfig"; sourceTree = "<group>"; };
+		E721CD132B00018C00932DA6 /* ScrollableStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollableStackView.swift; sourceTree = "<group>"; };
 		E7F35AF52AFFA79C00E47520 /* PopularMovies.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PopularMovies.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E7F35AF82AFFA79C00E47520 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E7F35AFA2AFFA79C00E47520 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -72,6 +74,16 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		E721CD122B00017900932DA6 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				E7F35B222AFFB4B000E47520 /* BaseTableViewCell.swift */,
+				E7F35B2D2AFFC82E00E47520 /* DynamicTableView.swift */,
+				E721CD132B00018C00932DA6 /* ScrollableStackView.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
 		E7EFDF5EDD65146AEE924FB6 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -105,6 +117,7 @@
 				E7F35B0D2AFFA8F700E47520 /* Networking */,
 				E7F35B0C2AFFA8F300E47520 /* Scenes */,
 				E7F35B1B2AFFAD7500E47520 /* Model */,
+				E721CD122B00017900932DA6 /* Components */,
 				E7F35B212AFFB49E00E47520 /* Base */,
 				E7F35B2A2AFFC4C200E47520 /* Utilities */,
 				E7F35B2F2AFFCD8100E47520 /* Extensions */,
@@ -173,9 +186,7 @@
 		E7F35B212AFFB49E00E47520 /* Base */ = {
 			isa = PBXGroup;
 			children = (
-				E7F35B222AFFB4B000E47520 /* BaseTableViewCell.swift */,
 				E7F35B262AFFC04200E47520 /* BaseViewController.swift */,
-				E7F35B2D2AFFC82E00E47520 /* DynamicTableView.swift */,
 			);
 			path = Base;
 			sourceTree = "<group>";
@@ -318,6 +329,7 @@
 				E7F35B232AFFB4B000E47520 /* BaseTableViewCell.swift in Sources */,
 				E7F35B172AFFA96100E47520 /* NetworkManager.swift in Sources */,
 				E7F35B2E2AFFC82E00E47520 /* DynamicTableView.swift in Sources */,
+				E721CD142B00018C00932DA6 /* ScrollableStackView.swift in Sources */,
 				E7F35B192AFFAA4100E47520 /* MovieAPI.swift in Sources */,
 				E7F35AF92AFFA79C00E47520 /* AppDelegate.swift in Sources */,
 				E7F35AFB2AFFA79C00E47520 /* SceneDelegate.swift in Sources */,

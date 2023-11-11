@@ -69,7 +69,6 @@ final class MovieListViewController: BaseViewController {
                     if cellData.indexPath.row == movies.count - 1 {
                         self.viewModel.increasePageCount()
                         self.viewModel.getPopularMovieListData()
-                        print("refetched!")
                     }
                 }
             }
