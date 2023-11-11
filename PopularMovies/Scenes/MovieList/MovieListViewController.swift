@@ -58,7 +58,7 @@ extension MovieListViewController: UICollectionViewDelegate, UICollectionViewDat
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.popularMovieListCollectionViewCellID, for: indexPath) as? PopularMovieListCollectionViewCell {
+        if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.popularMovieListCollectionViewCellID, for: indexPath) as? MovieListCollectionViewCell {
             cell.setMovieData(popularMovieList: viewModel.movieList, starredMovieIdList: starredMovieIdList, indexPath: indexPath)
             return cell
         } else {
