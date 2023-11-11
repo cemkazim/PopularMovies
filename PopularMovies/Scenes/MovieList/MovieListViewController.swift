@@ -6,12 +6,13 @@
 //
 
 import UIKit
+import SnapKit
 
 final class MovieListViewController: BaseViewController {
     
     // MARK: - Properties
     
-    private var movieListCollectionView: UICollectionView!
+    private var movieListTableView: DynamicTableView!
     private var viewModel: MovieListViewModel!
     
     // MARK: - Lifecycle
@@ -30,51 +31,44 @@ final class MovieListViewController: BaseViewController {
     }
     
     private func setupView() {
-        setupCollectionView()
+        setupTableView()
         viewModel.getPopularMovieListData()
     }
     
-    private func setupCollectionView() {
-        let layout = UICollectionViewFlowLayout()
-        layout.estimatedItemSize = CGSize(width: 200, height: 200)
-        layout.scrollDirection = .vertical
-        movieListCollectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        movieListCollectionView.translatesAutoresizingMaskIntoConstraints = false
-        movieListCollectionView.setCollectionViewLayout(layout, animated: true)
-        movieListCollectionView.backgroundColor = .clear
-        movieListCollectionView.backgroundView = UIView.init(frame: .zero)
-        movieListCollectionView.delegate = self
-        movieListCollectionView.dataSource = self
-        movieListCollectionView.register(MovieListCollectionViewCell.self,
-                                         forCellWithReuseIdentifier: MovieListCollectionViewCell.cellID)
-        view.addSubview(movieListCollectionView)
-        NSLayoutConstraint.activate([
-            movieListCollectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            movieListCollectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            movieListCollectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            movieListCollectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
-        ])
+    private func setupTableView() {
+        movieListTableView = DynamicTableView(frame: .zero, style: .plain)
+        movieListTableView.separatorStyle = .none
+        movieListTableView.backgroundColor = .clear
+        view.addSubview(movieListTableView)
+        movieListTableView.snp.makeConstraints { view in
+            view.edges.equalToSuperview()
+        }
+        movieListTableView.register(MovieListTableViewCell.self,
+                           forCellReuseIdentifier: MovieListTableViewCell.cellID)
+        movieListTableView.delegate = self
+        movieListTableView.dataSource = self
+        movieListTableView.reloadData()
     }
 }
 
-// MARK: - UICollectionViewDelegate, UICollectionViewDataSource
+// MARK: - UITableViewDelegate, UITableViewDataSource
 
-extension MovieListViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+extension MovieListViewController: UITableViewDelegate, UITableViewDataSource {
     
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return viewModel.movieList.count
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieListCollectionViewCell.cellID, for: indexPath) as? MovieListCollectionViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if let cell = tableView.dequeueReusableCell(withIdentifier: MovieListTableViewCell.cellID, for: indexPath) as? MovieListTableViewCell {
             cell.updateUI(with: viewModel.movieList[indexPath.row])
             return cell
         } else {
-            return UICollectionViewCell()
+            return UITableViewCell()
         }
     }
     
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let movieId = viewModel.movieList[indexPath.row].id {
 //            let movieDetailViewController = MovieDetailViewController()
 //            movieDetailViewController.selectedMovieId = movieId
@@ -89,7 +83,7 @@ extension MovieListViewController: MovieListViewModelDelegate {
     
     func reloadList() {
         DispatchQueue.main.async {
-            self.movieListCollectionView.reloadData()
+            self.movieListTableView.reloadData()
         }
     }
 }

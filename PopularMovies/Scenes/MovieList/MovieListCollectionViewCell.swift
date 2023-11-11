@@ -7,18 +7,20 @@
 
 import UIKit
 import SDWebImage
+import SnapKit
 
-class MovieListCollectionViewCell: BaseCollectionViewCell {
+class MovieListTableViewCell: BaseTableViewCell {
     
     // MARK: - Properties
     
-    private var movieNameLabel: UILabel!
     private var movieImageView: UIImageView!
+    private var movieNameLabel: UILabel!
+    private var movieRatingLabel: UILabel!
     
     // MARK: - Initializers
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupView()
     }
     
@@ -28,44 +30,51 @@ class MovieListCollectionViewCell: BaseCollectionViewCell {
     
     // MARK: - Methods
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        movieImageView.image = nil
+        movieNameLabel.text = nil
+        movieRatingLabel.text = nil
+    }
+    
     private func setupView() {
-        setupMovieNameLabel()
-        setupMovieImageView()
-        setupConstraints()
-    }
-    
-    private func setupMovieImageView() {
+        selectionStyle = .none
         movieImageView = UIImageView()
-        movieImageView.translatesAutoresizingMaskIntoConstraints = false
         movieImageView.contentMode = .scaleAspectFit
-        addSubview(movieImageView)
-    }
-    
-    private func setupMovieNameLabel() {
+        contentView.addSubview(movieImageView)
+        movieImageView.snp.makeConstraints { view in
+            view.top.equalToSuperview().offset(20)
+            view.centerX.equalToSuperview()
+            view.width.equalTo(150)
+            view.height.equalTo(225)
+        }
         movieNameLabel = UILabel()
-        movieNameLabel.translatesAutoresizingMaskIntoConstraints = false
         movieNameLabel.font = UIFont.systemFont(ofSize: 16)
-        movieNameLabel.numberOfLines = 2
         movieNameLabel.textColor = .black
-        movieNameLabel.textAlignment = .left
-        addSubview(movieNameLabel)
-    }
-    
-    private func setupConstraints() {
-        NSLayoutConstraint.activate([
-            movieImageView.topAnchor.constraint(equalTo: topAnchor, constant: 10),
-            movieImageView.widthAnchor.constraint(equalToConstant: 150),
-            movieImageView.heightAnchor.constraint(equalToConstant: 150),
-            movieImageView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            
-            movieNameLabel.topAnchor.constraint(equalTo: movieImageView.bottomAnchor, constant: 10),
-            movieNameLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 25),
-            movieNameLabel.widthAnchor.constraint(equalToConstant: 100)
-        ])
+        movieNameLabel.textAlignment = .center
+        movieNameLabel.numberOfLines = .zero
+        contentView.addSubview(movieNameLabel)
+        movieNameLabel.snp.makeConstraints { view in
+            view.top.equalTo(movieImageView.snp.bottom).offset(20)
+            view.left.equalToSuperview().offset(20)
+            view.right.equalToSuperview().offset(-20)
+        }
+        movieRatingLabel = UILabel()
+        movieRatingLabel.font = UIFont.systemFont(ofSize: 16)
+        movieRatingLabel.textColor = .black
+        movieRatingLabel.textAlignment = .center
+        movieRatingLabel.numberOfLines = .zero
+        contentView.addSubview(movieRatingLabel)
+        movieRatingLabel.snp.makeConstraints { view in
+            view.top.equalTo(movieNameLabel.snp.bottom).offset(20)
+            view.left.equalToSuperview().offset(20)
+            view.right.bottom.equalToSuperview().offset(-20)
+        }
     }
     
     func updateUI(with movie: MovieDetailModel) {
-        movieNameLabel.text = movie.name
+        movieNameLabel.text = "Name: \(movie.name ?? "")"
+        movieRatingLabel.text = "Rating: \(movie.rating ?? 0)/10"
         movieImageView.sd_imageIndicator = SDWebImageActivityIndicator.grayLarge
         movieImageView.sd_setImage(with: URL(string: movie.posterPath ?? ""))
     }

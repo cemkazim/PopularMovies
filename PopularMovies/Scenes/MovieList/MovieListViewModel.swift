@@ -43,14 +43,11 @@ final class MovieListViewModel {
     
     private func handle(_ movieList: [MovieDetailModel]) {
         for movie in movieList {
-            if let name = movie.name,
-               let imageURL = movie.posterPath,
-               let movieId = movie.id {
-                let resultModel = MovieDetailModel(name: name,
-                                                   posterPath: imageBaseURL + imageURL,
-                                                   id: movieId)
-                self.movieList.append(resultModel)
-            }
+            let resultModel = MovieDetailModel(name: movie.name,
+                                               posterPath: imageBaseURL + (movie.posterPath ?? ""),
+                                               id: movie.id,
+                                               rating: movie.rating)
+            self.movieList.append(resultModel)
         }
         delegate?.reloadList()
     }

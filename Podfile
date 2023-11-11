@@ -9,6 +9,7 @@ target 'PopularMovies' do
   pod 'RxCocoa', '6.6.0'
   pod 'Alamofire', '5.8.1'
   pod 'SDWebImage', '5.18.3'
+  pod 'SnapKit', '5.6.0'
 
   # Pods for PopularMovies
 

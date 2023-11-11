@@ -1,5 +1,5 @@
 //
-//  BaseCollectionViewCell.swift
+//  BaseTableViewCell.swift
 //  PopularMovies
 //
 //  Created by Cem Kazım on 11.11.2023.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class BaseCollectionViewCell: UICollectionViewCell {
+class BaseTableViewCell: UITableViewCell {
     
     // MARK: - Properties
     
@@ -17,8 +17,8 @@ class BaseCollectionViewCell: UICollectionViewCell {
     
     // MARK: - Initializers
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
     }
     
     required init?(coder: NSCoder) {
