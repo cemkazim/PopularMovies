@@ -14,8 +14,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
-        let initialViewController = UINavigationController(rootViewController: <#T##UIViewController#>)
-        initialViewController.setRootWireframe(HomeWireframe())
+        let initialViewController = UINavigationController(rootViewController: MovieListViewController())
         window?.rootViewController = initialViewController
         window?.makeKeyAndVisible()
     }

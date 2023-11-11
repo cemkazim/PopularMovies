@@ -13,12 +13,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        let initialViewController = UINavigationController()
+        let initialViewController = UINavigationController(rootViewController: MovieListViewController())
         window = UIWindow(frame: UIScreen.main.bounds)
         guard let window = window else {
             return false
         }
-        initialViewController.setRootWireframe(HomeWireframe())
         window.rootViewController = initialViewController
         window.makeKeyAndVisible()
         return true

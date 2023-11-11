@@ -10,6 +10,7 @@ import Foundation
 class MovieAPI {
     
     static let shared = MovieAPI()
+    let movieImageBaseURLPath = "https://image.tmdb.org/t/p/w200"
     
     private init() {}
     
