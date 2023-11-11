@@ -47,7 +47,7 @@ final class MovieListViewModel {
                let imageURL = movie.posterPath,
                let movieId = movie.id {
                 let resultModel = MovieDetailModel(name: name,
-                                                   posterPath: MovieAPI.shared.movieImageBaseURLPath + imageURL,
+                                                   posterPath: imageBaseURL + imageURL,
                                                    id: movieId)
                 self.movieList.append(resultModel)
             }
