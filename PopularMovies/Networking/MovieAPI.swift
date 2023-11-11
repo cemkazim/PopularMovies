@@ -17,9 +17,9 @@ class MovieAPI {
     /// Description: Request the API data with parameters for popular movies.
     /// - Parameters:
     ///   - pageId: Page count of movie list.
-    func createPopularMovieURL(pageId: Int) -> URL? {
+    func getPopularMovieURLString(pageId: Int) -> URL? {
         var components = baseURLComponents()
-        components.path = "/3/movie/popular"
+        components.path = "/3/tv/popular"
         components.queryItems?.append(URLQueryItem(name: "page", value: String(pageId)))
         return components.url
     }
@@ -30,19 +30,8 @@ class MovieAPI {
         components.scheme = "https"
         components.host = "api.themoviedb.org"
         components.queryItems = [
-            URLQueryItem(name: "language", value: "en-US"),
-            URLQueryItem(name: "api_key", value: "fc4147091caa304654154fb4dee3bf04")
+            URLQueryItem(name: "language", value: "en-US")
         ]
         return components
     }
-}
-
-/// Description: Usable http methods.
-enum HttpMethods: String {
-    case get = "GET"
-    case head = "HEAD"
-    case post = "POST"
-    case put = "PUT"
-    case delete = "DELETE"
-    case connect = "CONNECT"
 }

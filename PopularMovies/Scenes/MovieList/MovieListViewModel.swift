@@ -5,7 +5,7 @@
 //  Created by Cem Kazım on 11.11.2023.
 //
 
-import Foundation
+import RxSwift
 
 // MARK: - MovieListViewModelDelegate
 
@@ -19,32 +19,34 @@ final class MovieListViewModel {
     
     private var pageCount = 1
     private(set) var movieList: [MovieDetailModel] = []
+    private var disposeBag = DisposeBag()
     weak var delegate: MovieListViewModelDelegate?
     
     // MARK: - Methods
     
     func getPopularMovieListData() {
-        let url = MovieAPI.shared.createPopularMovieURL(pageId: pageCount)
-        guard let requestURL = url else { return }
-        NetworkManager.shared.request(url: requestURL.absoluteString, method: .get) { [weak self] (result: Result<MovieListModel, Error>) in
-            guard let self = self else { return }
-            switch result {
-            case .success(let response):
-                if let movieList = response.list {
-                    self.handle(movieList)
+        guard let url = MovieAPI.shared.getPopularMovieURLString(pageId: pageCount) else { return }
+        NetworkManager.shared.request(url: url, method: .get)
+            .subscribe { [weak self] (event: Result<MovieListModel, Error>) in
+                guard let self = self else { return }
+                switch event {
+                case .success(let result):
+                    if let movieList = result.list {
+                        self.handle(movieList)
+                    }
+                case .failure(let error):
+                    print(error)
                 }
-            case .failure(let error):
-                print(error)
             }
-        }
+            .disposed(by: disposeBag)
     }
     
     private func handle(_ movieList: [MovieDetailModel]) {
         for movie in movieList {
-            if let title = movie.title,
+            if let name = movie.name,
                let imageURL = movie.posterPath,
                let movieId = movie.id {
-                let resultModel = MovieDetailModel(title: title,
+                let resultModel = MovieDetailModel(name: name,
                                                    posterPath: MovieAPI.shared.movieImageBaseURLPath + imageURL,
                                                    id: movieId)
                 self.movieList.append(resultModel)

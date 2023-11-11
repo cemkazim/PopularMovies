@@ -18,12 +18,13 @@ struct MovieListModel: Decodable {
 }
 
 struct MovieDetailModel: Decodable {
-    let title: String?
+    let name: String?
     let posterPath: String?
     let id: Int?
     
     enum CodingKeys: String, CodingKey {
-        case title, id
+        case name = "original_name"
+        case id
         case posterPath = "poster_path"
     }
 }

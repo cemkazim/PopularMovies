@@ -8,7 +8,7 @@
 import UIKit
 import SDWebImage
 
-class MovieListCollectionViewCell: UICollectionViewCell {
+class MovieListCollectionViewCell: BaseCollectionViewCell {
     
     // MARK: - Properties
     
@@ -64,9 +64,9 @@ class MovieListCollectionViewCell: UICollectionViewCell {
         ])
     }
     
-    func setMovieData(movieList: [MovieDetailModel], indexPath: IndexPath) {
-        movieNameLabel.text = movieList[indexPath.row].title
+    func updateUI(with movie: MovieDetailModel) {
+        movieNameLabel.text = movie.name
         movieImageView.sd_imageIndicator = SDWebImageActivityIndicator.grayLarge
-        movieImageView.sd_setImage(with: URL(string: movieList[indexPath.row].posterPath ?? ""))
+        movieImageView.sd_setImage(with: URL(string: movie.posterPath ?? ""))
     }
 }

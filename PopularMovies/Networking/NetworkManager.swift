@@ -6,6 +6,11 @@
 //
 
 import Alamofire
+import RxSwift
+
+enum NetworkError: Error {
+    case invalidURL
+}
 
 class NetworkManager {
     
@@ -19,14 +24,30 @@ class NetworkManager {
     ///   - method: Any HTTPMethod.
     ///   - parameters: Request body (optional).
     ///   - onComplete: Pass the data with completion.
-    func request<T: Decodable>(url: String, method: HTTPMethod, parameters: Parameters? = nil, onComplete: @escaping (Result<T, Error>) -> ()) {
-        AF.request(url, method: method, parameters: parameters, encoding: URLEncoding.default).response { (response) in
-            guard let remoteData = response.data else { return }
-            do {
-                let decodedData = try JSONDecoder().decode(T.self, from: remoteData)
-                onComplete(.success(decodedData))
-            } catch let error {
-                onComplete(.failure(error))
+    func request<T: Decodable>(url: URL, method: HTTPMethod, parameters: Parameters? = nil) -> Single<T> {
+        return Single.create { single in
+            let headers = HTTPHeaders([
+                HTTPHeader(name: "Authorization",
+                           value: "Bearer \(accessToken)"),
+                HTTPHeader(name: "accept",
+                           value: "application/json")
+            ])
+            let request = AF.request(url, method: method, parameters: parameters, encoding: URLEncoding.default, headers: headers)
+                .response { response in
+                    switch response.result {
+                    case .success(let data):
+                        do {
+                            let decodedData = try JSONDecoder().decode(T.self, from: data ?? Data())
+                            single(.success(decodedData))
+                        } catch let error {
+                            single(.failure(error))
+                        }
+                    case .failure(let error):
+                        single(.failure(error))
+                    }
+                }
+            return Disposables.create {
+                request.cancel()
             }
         }
     }
