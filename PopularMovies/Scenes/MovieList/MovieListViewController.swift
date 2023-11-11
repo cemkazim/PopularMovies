@@ -10,30 +10,16 @@ import SnapKit
 import RxSwift
 import RxCocoa
 
-final class MovieListViewController: BaseViewController {
+final class MovieListViewController: BaseViewController<MovieListViewModel> {
     
     // MARK: - Properties
     
     private var movieListTableView: DynamicTableView!
-    private var viewModel: MovieListViewModel!
     private var disposeBag = DisposeBag()
-    
-    // MARK: - Lifecycle
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        setupViewModel()
-        setupView()
-        listenObservables()
-    }
     
     // MARK: - Methods
     
-    private func setupViewModel() {
-        viewModel = MovieListViewModel()
-    }
-    
-    private func setupView() {
+    override func setupView() {
         movieListTableView = DynamicTableView(frame: .zero, style: .plain)
         movieListTableView.separatorStyle = .none
         movieListTableView.backgroundColor = .clear
@@ -43,12 +29,12 @@ final class MovieListViewController: BaseViewController {
         }
         movieListTableView.register(MovieListTableViewCell.self,
                                    forCellReuseIdentifier: MovieListTableViewCell.cellID)
-        viewModel.getPopularMovieListData()
     }
     
-    private func listenObservables() {
+    override func bindViewModel() {
+        viewModel.getPopularMovieListData()
         viewModel.movieListObservable
-            .bind(to: movieListTableView.rx.items(cellIdentifier: "MovieListTableViewCell",
+            .bind(to: movieListTableView.rx.items(cellIdentifier: MovieListTableViewCell.cellID,
                                                   cellType: MovieListTableViewCell.self)) { index, element, cell in
                 cell.updateUI(with: element)
             }
@@ -56,9 +42,8 @@ final class MovieListViewController: BaseViewController {
         Observable.combineLatest(movieListTableView.rx.itemSelected, viewModel.movieListObservable)
             .subscribe(onNext: { [weak self] (indexPath, movies: [MovieDetailModel]) in
                 guard let self = self else { return }
-                let movieDetailViewController = MovieDetailViewController()
                 let movieDetailViewModel = MovieDetailViewModel(movie: movies[indexPath.row])
-                movieDetailViewController.setupViewModel(movieDetailViewModel)
+                let movieDetailViewController = MovieDetailViewController(viewModel: movieDetailViewModel)
                 self.navigationController?.pushViewController(movieDetailViewController, animated: true)
             })
             .disposed(by: disposeBag)

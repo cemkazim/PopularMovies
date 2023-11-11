@@ -7,14 +7,14 @@
 
 import RxSwift
 
-final class MovieListViewModel {
+final class MovieListViewModel: BaseViewModel {
     
     // MARK: - Properties
     
     private var pageNumber = 1
     private var pageItemCount = 20
     private var movieList: [MovieDetailModel] = []
-    private var movieListSubject = BehaviorSubject<[MovieDetailModel]>(value: [])
+    private var movieListSubject = PublishSubject<[MovieDetailModel]>()
     var movieListObservable: Observable<[MovieDetailModel]> {
         return movieListSubject.asObservable()
     }

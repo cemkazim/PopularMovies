@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class MovieDetailViewModel {
+final class MovieDetailViewModel: BaseViewModel {
     
     // MARK: - Properties
     
