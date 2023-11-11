@@ -73,8 +73,10 @@ class MovieListTableViewCell: BaseTableViewCell {
     }
     
     func updateUI(with movie: MovieDetailModel) {
-        movieNameLabel.text = "Name: \(movie.name ?? "")"
-        movieRatingLabel.text = "Rating: \(movie.rating ?? 0)/10"
+        let nameText = "MovieNameTitle".localized + (movie.name ?? "")
+        movieNameLabel.text = nameText
+        let ratingText = "MovieRatingTitle".localized + "\(movie.rating ?? 0)"
+        movieRatingLabel.text = ratingText
         movieImageView.sd_imageIndicator = SDWebImageActivityIndicator.grayLarge
         movieImageView.sd_setImage(with: URL(string: movie.posterPath ?? ""))
     }

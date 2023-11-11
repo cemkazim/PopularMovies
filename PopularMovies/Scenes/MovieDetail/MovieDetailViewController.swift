@@ -36,34 +36,82 @@ final class MovieDetailViewController: BaseViewController {
     }
     
     private func setupView() {
+        setupScrollableStackView()
+        setupPosterImageView()
+        setupNameLabel()
+        setupOverviewLabel()
+        setupFirstAirDateLabel()
+        setupRatingLabel()
+        setupLabelStackView()
+    }
+    
+    private func setupScrollableStackView() {
         scrollableStackView = ScrollableStackView(frame: .zero, itemSpacing: 20)
         view.addSubview(scrollableStackView)
+        scrollableStackView.snp.makeConstraints { view in
+            view.top.left.equalToSuperview().offset(20)
+            view.right.bottom.equalToSuperview().offset(-20)
+        }
+    }
+    
+    private func setupPosterImageView() {
         posterImageView = UIImageView()
         posterImageView.translatesAutoresizingMaskIntoConstraints = false
         posterImageView.contentMode = .scaleAspectFit
         posterImageView.sd_imageIndicator = SDWebImageActivityIndicator.grayLarge
         posterImageView.sd_setImage(with: URL(string: viewModel.movie.posterPath ?? ""))
         scrollableStackView.addViewToStackView(posterImageView)
+        posterImageView.snp.makeConstraints { view in
+            view.centerX.equalToSuperview()
+            view.height.equalTo(250)
+        }
+    }
+    
+    private func setupNameLabel() {
+        let text = "MovieNameTitle".localized + (viewModel.movie.name ?? "")
         nameLabel = UILabel()
-        create(label: nameLabel,
-               text: "Name: \(viewModel.movie.name ?? "")",
-               font: UIFont.systemFont(ofSize: 16),
-               alignment: .center)
+        nameLabel.text = text
+        nameLabel.font = UIFont.systemFont(ofSize: 16)
+        nameLabel.textColor = .black
+        nameLabel.numberOfLines = .zero
+        nameLabel.textColor = .black
+        nameLabel.textAlignment = .center
+    }
+
+    private func setupOverviewLabel() {
+        let text = "MovieOverviewTitle".localized + (viewModel.movie.overview ?? "")
         overviewLabel = UILabel()
-        create(label: overviewLabel,
-               text: "Overview:\n \(viewModel.movie.overview ?? "")",
-               font: UIFont.systemFont(ofSize: 16),
-               alignment: .center)
+        overviewLabel.text = text
+        overviewLabel.font = UIFont.systemFont(ofSize: 16)
+        overviewLabel.textColor = .black
+        overviewLabel.numberOfLines = .zero
+        overviewLabel.textColor = .black
+        overviewLabel.textAlignment = .center
+    }
+
+    private func setupFirstAirDateLabel() {
+        let text = "MovieFirstAirDateTitle".localized + (viewModel.movie.firstAirDate ?? "")
         firstAirDateLabel = UILabel()
-        create(label: firstAirDateLabel,
-               text: "First Air Date: \(viewModel.movie.firstAirDate ?? "")",
-               font: UIFont.systemFont(ofSize: 16),
-               alignment: .center)
+        firstAirDateLabel.text = text
+        firstAirDateLabel.font = UIFont.systemFont(ofSize: 16)
+        firstAirDateLabel.textColor = .black
+        firstAirDateLabel.numberOfLines = .zero
+        firstAirDateLabel.textColor = .black
+        firstAirDateLabel.textAlignment = .center
+    }
+
+    private func setupRatingLabel() {
+        let text = "MovieRatingTitle".localized + "\(viewModel.movie.rating ?? 0)"
         ratingLabel = UILabel()
-        create(label: ratingLabel,
-               text: "Rating: \(viewModel.movie.rating ?? 0)",
-               font: UIFont.systemFont(ofSize: 16),
-               alignment: .center)
+        ratingLabel.text = text
+        ratingLabel.font = UIFont.systemFont(ofSize: 16)
+        ratingLabel.textColor = .black
+        ratingLabel.numberOfLines = .zero
+        ratingLabel.textColor = .black
+        ratingLabel.textAlignment = .center
+    }
+    
+    private func setupLabelStackView() {
         labelStackView = UIStackView(arrangedSubviews: [nameLabel, overviewLabel, firstAirDateLabel, ratingLabel])
         labelStackView.spacing = 20
         labelStackView.translatesAutoresizingMaskIntoConstraints = false
@@ -71,21 +119,5 @@ final class MovieDetailViewController: BaseViewController {
         labelStackView.alignment = .fill
         labelStackView.distribution = .fill
         scrollableStackView.addViewToStackView(labelStackView)
-        scrollableStackView.snp.makeConstraints { view in
-            view.top.left.equalToSuperview().offset(20)
-            view.right.bottom.equalToSuperview().offset(-20)
-        }
-        posterImageView.snp.makeConstraints { view in
-            view.centerX.equalToSuperview()
-            view.height.equalTo(250)
-        }
-    }
-    
-    private func create(label: UILabel, text: String, font: UIFont, alignment: NSTextAlignment) {
-        label.text = text
-        label.font = font
-        label.numberOfLines = .zero
-        label.textColor = .black
-        label.textAlignment = alignment
     }
 }
