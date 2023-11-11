@@ -9,4 +9,13 @@ import Foundation
 
 final class MovieDetailViewModel {
     
+    // MARK: - Properties
+    
+    private(set) var movie: MovieDetailModel
+    
+    // MARK: - Initializers
+    
+    init(movie: MovieDetailModel) {
+        self.movie = movie
+    }
 }
