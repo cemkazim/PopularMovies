@@ -1,0 +1,12 @@
+/* 
+  Localizable.strings
+  PopularMovies
+
+  Created by Cem Kazım on 11.11.2023.
+  
+*/
+
+"MovieNameTitle" = "Film adı: ";
+"MovieOverviewTitle" = "Genel bakış:\n";
+"MovieFirstAirDateTitle" = "İlk tarihi: ";
+"MovieRatingTitle" = "Derecelendirme: ";
