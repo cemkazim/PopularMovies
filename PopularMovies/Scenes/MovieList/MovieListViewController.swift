@@ -7,6 +7,8 @@
 
 import UIKit
 import SnapKit
+import RxSwift
+import RxCocoa
 
 final class MovieListViewController: BaseViewController {
     
@@ -14,6 +16,7 @@ final class MovieListViewController: BaseViewController {
     
     private var movieListTableView: DynamicTableView!
     private var viewModel: MovieListViewModel!
+    private var disposeBag = DisposeBag()
     
     // MARK: - Lifecycle
     
@@ -27,15 +30,9 @@ final class MovieListViewController: BaseViewController {
     
     private func setupViewModel() {
         viewModel = MovieListViewModel()
-        viewModel.delegate = self
     }
     
     private func setupView() {
-        setupTableView()
-        viewModel.getPopularMovieListData()
-    }
-    
-    private func setupTableView() {
         movieListTableView = DynamicTableView(frame: .zero, style: .plain)
         movieListTableView.separatorStyle = .none
         movieListTableView.backgroundColor = .clear
@@ -44,46 +41,31 @@ final class MovieListViewController: BaseViewController {
             view.edges.equalToSuperview()
         }
         movieListTableView.register(MovieListTableViewCell.self,
-                           forCellReuseIdentifier: MovieListTableViewCell.cellID)
-        movieListTableView.delegate = self
-        movieListTableView.dataSource = self
-        movieListTableView.reloadData()
-    }
-}
-
-// MARK: - UITableViewDelegate, UITableViewDataSource
-
-extension MovieListViewController: UITableViewDelegate, UITableViewDataSource {
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.movieList.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if let cell = tableView.dequeueReusableCell(withIdentifier: MovieListTableViewCell.cellID, for: indexPath) as? MovieListTableViewCell {
-            cell.updateUI(with: viewModel.movieList[indexPath.row])
-            return cell
-        } else {
-            return UITableViewCell()
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let movieId = viewModel.movieList[indexPath.row].id {
-//            let movieDetailViewController = MovieDetailViewController()
-//            movieDetailViewController.selectedMovieId = movieId
-//            navigationController?.pushViewController(movieDetailViewController, animated: true)
-        }
-    }
-}
-
-// MARK: - UICollectionViewDelegate, UICollectionViewDataSource
-
-extension MovieListViewController: MovieListViewModelDelegate {
-    
-    func reloadList() {
-        DispatchQueue.main.async {
-            self.movieListTableView.reloadData()
-        }
+                                   forCellReuseIdentifier: MovieListTableViewCell.cellID)
+        viewModel.movieListObservable
+            .bind(to: movieListTableView.rx.items(cellIdentifier: "MovieListTableViewCell",
+                                                  cellType: MovieListTableViewCell.self)) { index, element, cell in
+                cell.updateUI(with: element)
+            }
+            .disposed(by: disposeBag)
+        movieListTableView.rx
+            .modelSelected(MovieListTableViewCell.self)
+            .subscribe(onNext: { movie in
+                print("Selected movie: \(movie)")
+            })
+            .disposed(by: disposeBag)
+        Observable.combineLatest(movieListTableView.rx.willDisplayCell, viewModel.movieListObservable)
+            .subscribe { [weak self] (cellData, movies: [MovieDetailModel]) in
+                guard let self = self else { return }
+                if movies.count == self.viewModel.getPageItemCount() * self.viewModel.getCurrentPageNumber() {
+                    if cellData.indexPath.row == movies.count - 1 {
+                        self.viewModel.increasePageCount()
+                        self.viewModel.getPopularMovieListData()
+                        print("refetched!")
+                    }
+                }
+            }
+            .disposed(by: disposeBag)
+        viewModel.getPopularMovieListData()
     }
 }

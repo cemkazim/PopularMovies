@@ -7,25 +7,23 @@
 
 import RxSwift
 
-// MARK: - MovieListViewModelDelegate
-
-protocol MovieListViewModelDelegate: AnyObject {
-    func reloadList()
-}
-
 final class MovieListViewModel {
     
     // MARK: - Properties
     
-    private var pageCount = 1
-    private(set) var movieList: [MovieDetailModel] = []
+    private var pageNumber = 1
+    private var pageItemCount = 20
+    private var movieList: [MovieDetailModel] = []
+    private var movieListSubject = BehaviorSubject<[MovieDetailModel]>(value: [])
+    var movieListObservable: Observable<[MovieDetailModel]> {
+        return movieListSubject.asObservable()
+    }
     private var disposeBag = DisposeBag()
-    weak var delegate: MovieListViewModelDelegate?
     
     // MARK: - Methods
     
     func getPopularMovieListData() {
-        guard let url = MovieAPI.shared.getPopularMovieURLString(pageId: pageCount) else { return }
+        guard let url = MovieAPI.shared.getPopularMovieURLString(pageId: pageNumber) else { return }
         NetworkManager.shared.request(url: url, method: .get)
             .subscribe { [weak self] (event: Result<MovieListModel, Error>) in
                 guard let self = self else { return }
@@ -41,14 +39,28 @@ final class MovieListViewModel {
             .disposed(by: disposeBag)
     }
     
-    private func handle(_ movieList: [MovieDetailModel]) {
-        for movie in movieList {
+    private func handle(_ list: [MovieDetailModel]) {
+        for movie in list {
             let resultModel = MovieDetailModel(name: movie.name,
                                                posterPath: imageBaseURL + (movie.posterPath ?? ""),
                                                id: movie.id,
-                                               rating: movie.rating)
-            self.movieList.append(resultModel)
+                                               rating: movie.rating,
+                                               overview: movie.overview,
+                                               firstAirDate: movie.firstAirDate)
+            movieList.append(resultModel)
         }
-        delegate?.reloadList()
+        movieListSubject.onNext(movieList)
+    }
+    
+    func increasePageCount() {
+        pageNumber += 1
+    }
+    
+    func getCurrentPageNumber() -> Int {
+        return pageNumber
+    }
+    
+    func getPageItemCount() -> Int {
+        return pageItemCount
     }
 }
