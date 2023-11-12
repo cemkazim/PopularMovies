@@ -10,30 +10,23 @@ import SnapKit
 import RxSwift
 import RxCocoa
 
-final class MovieListViewController: BaseViewController {
+final class MovieListViewController: BaseViewController<MovieListViewModel> {
     
     // MARK: - Properties
     
     private var movieListTableView: DynamicTableView!
-    private var viewModel: MovieListViewModel!
-    private var disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
     
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupViewModel()
-        setupView()
-        listenObservables()
     }
     
     // MARK: - Methods
     
-    private func setupViewModel() {
-        viewModel = MovieListViewModel()
-    }
-    
-    private func setupView() {
+    override func setupView() {
+        super.setupView()
         movieListTableView = DynamicTableView(frame: .zero, style: .plain)
         movieListTableView.separatorStyle = .none
         movieListTableView.backgroundColor = .clear
@@ -43,32 +36,33 @@ final class MovieListViewController: BaseViewController {
         }
         movieListTableView.register(MovieListTableViewCell.self,
                                    forCellReuseIdentifier: MovieListTableViewCell.cellID)
-        viewModel.getPopularMovieListData()
     }
     
-    private func listenObservables() {
-        viewModel.movieListObservable
-            .bind(to: movieListTableView.rx.items(cellIdentifier: "MovieListTableViewCell",
+    override func bindViewModel() {
+        let fetchListSubject = BehaviorRelay<()>(value: ())
+        let output = viewModel.transform(input: MovieListViewModel.Input(fetchMovieListTrigger: fetchListSubject))
+        output.movieListObservable
+            .bind(to: movieListTableView.rx.items(cellIdentifier: MovieListTableViewCell.cellID,
                                                   cellType: MovieListTableViewCell.self)) { index, element, cell in
-                cell.updateUI(with: element)
+                let viewModel = MovieListTableViewCellViewModel(movie: element)
+                cell.bindData(viewModel: viewModel)
             }
             .disposed(by: disposeBag)
-        Observable.combineLatest(movieListTableView.rx.itemSelected, viewModel.movieListObservable)
+        Observable.combineLatest(movieListTableView.rx.itemSelected, output.movieListObservable)
             .subscribe(onNext: { [weak self] (indexPath, movies: [MovieDetailModel]) in
                 guard let self = self else { return }
-                let movieDetailViewController = MovieDetailViewController()
                 let movieDetailViewModel = MovieDetailViewModel(movie: movies[indexPath.row])
-                movieDetailViewController.setupViewModel(movieDetailViewModel)
+                let movieDetailViewController = MovieDetailViewController(viewModel: movieDetailViewModel)
                 self.navigationController?.pushViewController(movieDetailViewController, animated: true)
             })
             .disposed(by: disposeBag)
-        Observable.combineLatest(movieListTableView.rx.willDisplayCell, viewModel.movieListObservable)
+        Observable.combineLatest(movieListTableView.rx.willDisplayCell, output.movieListObservable)
             .subscribe { [weak self] (cellData, movies: [MovieDetailModel]) in
                 guard let self = self else { return }
                 if movies.count == self.viewModel.getPageItemCount() * self.viewModel.getCurrentPageNumber() {
                     if cellData.indexPath.row == movies.count - 1 {
                         self.viewModel.increasePageCount()
-                        self.viewModel.getPopularMovieListData()
+                        fetchListSubject.accept(())
                     }
                 }
             }

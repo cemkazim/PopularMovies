@@ -8,8 +8,10 @@
 import UIKit
 import SnapKit
 import SDWebImage
+import RxSwift
+import RxRelay
 
-final class MovieDetailViewController: BaseViewController {
+final class MovieDetailViewController: BaseViewController<MovieDetailViewModel> {
     
     // MARK: - Properties
     
@@ -20,22 +22,18 @@ final class MovieDetailViewController: BaseViewController {
     private var overviewLabel: UILabel!
     private var firstAirDateLabel: UILabel!
     private var ratingLabel: UILabel!
-    private var viewModel: MovieDetailViewModel!
+    private var disposeBag = DisposeBag()
     
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupView()
     }
     
     // MARK: - Methods
     
-    func setupViewModel(_ viewModel: MovieDetailViewModel) {
-        self.viewModel = viewModel
-    }
-    
-    private func setupView() {
+    override func setupView() {
+        super.setupView()
         setupScrollableStackView()
         setupPosterImageView()
         setupNameLabel()
@@ -43,6 +41,25 @@ final class MovieDetailViewController: BaseViewController {
         setupFirstAirDateLabel()
         setupRatingLabel()
         setupLabelStackView()
+    }
+    
+    override func bindViewModel() {
+        let movieDetailSubject = BehaviorRelay<MovieDetailModel>(value: MovieDetailModel())
+        let output = viewModel.transform(input: MovieDetailViewModel.Input(movieDetailSubject: movieDetailSubject))
+        output.movieDetailObservable
+            .subscribe { [weak self] movie in
+                guard let self = self else { return }
+                self.posterImageView.sd_setImage(with: URL(string: movie.posterPath ?? "UndefinedText".localized))
+                let nameText = "MovieNameTitle".localized + (movie.name ?? "UndefinedText".localized)
+                self.nameLabel.text = nameText
+                let overviewText = "MovieOverviewTitle".localized + (movie.overview ?? "UndefinedText".localized)
+                self.overviewLabel.text = overviewText
+                let firstAirDateText = "MovieFirstAirDateTitle".localized + (movie.firstAirDate ?? "UndefinedText".localized)
+                self.firstAirDateLabel.text = firstAirDateText
+                let ratingText = "MovieRatingTitle".localized + "\(movie.rating ?? 0)"
+                self.ratingLabel.text = ratingText
+            }
+            .disposed(by: disposeBag)
     }
     
     private func setupScrollableStackView() {
@@ -59,7 +76,6 @@ final class MovieDetailViewController: BaseViewController {
         posterImageView.translatesAutoresizingMaskIntoConstraints = false
         posterImageView.contentMode = .scaleAspectFit
         posterImageView.sd_imageIndicator = SDWebImageActivityIndicator.grayLarge
-        posterImageView.sd_setImage(with: URL(string: viewModel.movie.posterPath ?? ""))
         scrollableStackView.addViewToStackView(posterImageView)
         posterImageView.snp.makeConstraints { view in
             view.centerX.equalToSuperview()
@@ -68,9 +84,7 @@ final class MovieDetailViewController: BaseViewController {
     }
     
     private func setupNameLabel() {
-        let text = "MovieNameTitle".localized + (viewModel.movie.name ?? "")
         nameLabel = UILabel()
-        nameLabel.text = text
         nameLabel.font = UIFont.systemFont(ofSize: 16)
         nameLabel.textColor = .black
         nameLabel.numberOfLines = .zero
@@ -79,9 +93,7 @@ final class MovieDetailViewController: BaseViewController {
     }
 
     private func setupOverviewLabel() {
-        let text = "MovieOverviewTitle".localized + (viewModel.movie.overview ?? "")
         overviewLabel = UILabel()
-        overviewLabel.text = text
         overviewLabel.font = UIFont.systemFont(ofSize: 16)
         overviewLabel.textColor = .black
         overviewLabel.numberOfLines = .zero
@@ -90,9 +102,7 @@ final class MovieDetailViewController: BaseViewController {
     }
 
     private func setupFirstAirDateLabel() {
-        let text = "MovieFirstAirDateTitle".localized + (viewModel.movie.firstAirDate ?? "")
         firstAirDateLabel = UILabel()
-        firstAirDateLabel.text = text
         firstAirDateLabel.font = UIFont.systemFont(ofSize: 16)
         firstAirDateLabel.textColor = .black
         firstAirDateLabel.numberOfLines = .zero
@@ -101,9 +111,7 @@ final class MovieDetailViewController: BaseViewController {
     }
 
     private func setupRatingLabel() {
-        let text = "MovieRatingTitle".localized + "\(viewModel.movie.rating ?? 0)"
         ratingLabel = UILabel()
-        ratingLabel.text = text
         ratingLabel.font = UIFont.systemFont(ofSize: 16)
         ratingLabel.textColor = .black
         ratingLabel.numberOfLines = .zero
