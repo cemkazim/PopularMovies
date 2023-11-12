@@ -1,0 +1,13 @@
+/* 
+  Localizable.strings
+  PopularMovies
+
+  Created by Cem Kazım on 11.11.2023.
+  
+*/
+
+"MovieNameTitle" = "Movie Name: ";
+"MovieOverviewTitle" = "Overview:\n";
+"MovieFirstAirDateTitle" = "First Air Date: ";
+"MovieRatingTitle" = "Rating: ";
+"UndefinedText" = "Undefined";

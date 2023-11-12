@@ -7,6 +7,21 @@
 
 import Foundation
 
-final class MovieDetailViewModel {
+final class MovieDetailViewModel: BaseViewModel {
     
+    // MARK: - Properties
+    
+    private var movie: MovieDetailModel
+    
+    // MARK: - Initializers
+    
+    init(movie: MovieDetailModel) {
+        self.movie = movie
+    }
+    
+    // MARK: - Methods
+    
+    func getMovie() -> MovieDetailModel {
+        return movie
+    }
 }
