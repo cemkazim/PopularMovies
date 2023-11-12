@@ -8,10 +8,6 @@
 import Alamofire
 import RxSwift
 
-enum NetworkError: Error {
-    case invalidURL
-}
-
 class NetworkManager {
     
     static let shared = NetworkManager()
@@ -28,7 +24,7 @@ class NetworkManager {
         return Single.create { single in
             let headers = HTTPHeaders([
                 HTTPHeader(name: "Authorization",
-                           value: "Bearer \(accessToken)"),
+                           value: "Bearer \(apiKey)"),
                 HTTPHeader(name: "accept",
                            value: "application/json")
             ])

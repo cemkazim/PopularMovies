@@ -6,16 +6,18 @@
 //
 
 import UIKit
+import SnapKit
 
 class BaseViewController<T: BaseViewModel>: UIViewController {
     
     // MARK: - Properties
     
-    var viewModel: T
+    var viewModel: T?
+    var mainView: UIView!
     
     // MARK: - Initializers
     
-    init(viewModel: T) {
+    init(viewModel: T? = nil) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -36,7 +38,12 @@ class BaseViewController<T: BaseViewModel>: UIViewController {
     
     /// Description: Perform all view setup operations.
     func setupView() {
-        view.backgroundColor = .white
+        mainView = UIView()
+        mainView.backgroundColor = .white
+        view.addSubview(mainView)
+        mainView.snp.makeConstraints { view in
+            view.edges.equalToSuperview()
+        }
     }
     
     /// Description: Bind view model data after the view is created.

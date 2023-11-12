@@ -6,8 +6,8 @@
   
 */
 
-"MovieNameTitle" = "Film adı: ";
-"MovieOverviewTitle" = "Genel bakış:\n";
-"MovieFirstAirDateTitle" = "İlk tarihi: ";
+"MovieNameTitle" = "Film Adı: ";
+"MovieOverviewTitle" = "Genel Bakış:\n";
+"MovieFirstAirDateTitle" = "İlk Yayın Tarihi: ";
 "MovieRatingTitle" = "Derecelendirme: ";
 "UndefinedText" = "Tanımlanmamış";

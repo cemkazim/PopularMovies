@@ -30,7 +30,7 @@ final class MovieListViewController: BaseViewController<MovieListViewModel> {
         movieListTableView = DynamicTableView(frame: .zero, style: .plain)
         movieListTableView.separatorStyle = .none
         movieListTableView.backgroundColor = .clear
-        view.addSubview(movieListTableView)
+        mainView.addSubview(movieListTableView)
         movieListTableView.snp.makeConstraints { view in
             view.edges.equalToSuperview()
         }
@@ -39,6 +39,7 @@ final class MovieListViewController: BaseViewController<MovieListViewModel> {
     }
     
     override func bindViewModel() {
+        guard let viewModel = viewModel else { return }
         let fetchListSubject = BehaviorRelay<()>(value: ())
         let output = viewModel.transform(input: MovieListViewModel.Input(fetchMovieListTrigger: fetchListSubject))
         output.movieListObservable
@@ -57,11 +58,10 @@ final class MovieListViewController: BaseViewController<MovieListViewModel> {
             })
             .disposed(by: disposeBag)
         Observable.combineLatest(movieListTableView.rx.willDisplayCell, output.movieListObservable)
-            .subscribe { [weak self] (cellData, movies: [MovieDetailModel]) in
-                guard let self = self else { return }
-                if movies.count == self.viewModel.getPageItemCount() * self.viewModel.getCurrentPageNumber() {
+            .subscribe { (cellData, movies: [MovieDetailModel]) in
+                if movies.count == viewModel.getPageItemCount() * viewModel.getCurrentPageNumber() {
                     if cellData.indexPath.row == movies.count - 1 {
-                        self.viewModel.increasePageCount()
+                        viewModel.increasePageNumber()
                         fetchListSubject.accept(())
                     }
                 }

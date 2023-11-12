@@ -5,25 +5,13 @@
 //  Created by Cem Kazım on 11.11.2023.
 //
 
-import RxRelay
-import RxSwift
+import Foundation
 
-final class MovieDetailViewModel: BaseViewModel, BaseViewModelType {
-    
-    // MARK: - Bindings
-    
-    struct Input {
-        let movieDetailSubject: BehaviorRelay<MovieDetailModel>
-    }
-    
-    struct Output {
-        let movieDetailObservable: Observable<MovieDetailModel>
-    }
+final class MovieDetailViewModel: BaseViewModel {
     
     // MARK: - Properties
     
     private var movie: MovieDetailModel
-    private var disposeBag = DisposeBag()
     
     // MARK: - Initializers
     
@@ -33,8 +21,7 @@ final class MovieDetailViewModel: BaseViewModel, BaseViewModelType {
     
     // MARK: - Methods
     
-    func transform(input: Input) -> Output {
-        input.movieDetailSubject.accept(movie)
-        return Output(movieDetailObservable: input.movieDetailSubject.asObservable())
+    func getMovie() -> MovieDetailModel {
+        return movie
     }
 }

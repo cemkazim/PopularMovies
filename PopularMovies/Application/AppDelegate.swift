@@ -16,9 +16,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let movieListViewController = MovieListViewController(viewModel: MovieListViewModel())
         let initialViewController = UINavigationController(rootViewController: movieListViewController)
         window = UIWindow(frame: UIScreen.main.bounds)
-        guard let window = window else {
-            return false
-        }
+        guard let window = window else { return false }
         window.rootViewController = initialViewController
         window.makeKeyAndVisible()
         return true

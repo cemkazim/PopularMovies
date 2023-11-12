@@ -7,12 +7,12 @@
 
 import Foundation
 
-class MovieListModel: Decodable {
+struct MovieListModel: Codable {
     
     // MARK: - Properties
     
-    var page: Int? = nil
-    var list: [MovieDetailModel]? = nil
+    let page: Int?
+    let list: [MovieDetailModel]?
     
     // MARK: - Coding Keys
     
@@ -20,25 +20,18 @@ class MovieListModel: Decodable {
         case page
         case list = "results"
     }
-    
-    // MARK: - Initializers
-    
-    init(page: Int? = nil, list: [MovieDetailModel]? = nil) {
-        self.page = page
-        self.list = list
-    }
 }
 
-class MovieDetailModel: Decodable {
+struct MovieDetailModel: Codable {
     
     // MARK: - Properties
     
-    var name: String? = nil
-    var posterPath: String? = nil
-    var id: Int? = nil
-    var rating: Double? = nil
-    var overview: String? = nil
-    var firstAirDate: String? = nil
+    let name: String?
+    let posterPath: String?
+    let id: Int?
+    let rating: Double?
+    let overview: String?
+    let firstAirDate: String?
     
     // MARK: - Coding Keys
     
@@ -49,16 +42,5 @@ class MovieDetailModel: Decodable {
         case rating = "vote_average"
         case overview
         case firstAirDate = "first_air_date"
-    }
-    
-    // MARK: - Initializers
-    
-    init(name: String? = nil, posterPath: String? = nil, id: Int? = nil, rating: Double? = nil, overview: String? = nil, firstAirDate: String? = nil) {
-        self.name = name
-        self.posterPath = posterPath
-        self.id = id
-        self.rating = rating
-        self.overview = overview
-        self.firstAirDate = firstAirDate
     }
 }

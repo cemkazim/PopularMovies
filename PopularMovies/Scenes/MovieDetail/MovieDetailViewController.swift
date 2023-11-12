@@ -8,8 +8,6 @@
 import UIKit
 import SnapKit
 import SDWebImage
-import RxSwift
-import RxRelay
 
 final class MovieDetailViewController: BaseViewController<MovieDetailViewModel> {
     
@@ -22,7 +20,6 @@ final class MovieDetailViewController: BaseViewController<MovieDetailViewModel> 
     private var overviewLabel: UILabel!
     private var firstAirDateLabel: UILabel!
     private var ratingLabel: UILabel!
-    private var disposeBag = DisposeBag()
     
     // MARK: - Lifecycle
     
@@ -44,27 +41,17 @@ final class MovieDetailViewController: BaseViewController<MovieDetailViewModel> 
     }
     
     override func bindViewModel() {
-        let movieDetailSubject = BehaviorRelay<MovieDetailModel>(value: MovieDetailModel())
-        let output = viewModel.transform(input: MovieDetailViewModel.Input(movieDetailSubject: movieDetailSubject))
-        output.movieDetailObservable
-            .subscribe { [weak self] movie in
-                guard let self = self else { return }
-                self.posterImageView.sd_setImage(with: URL(string: movie.posterPath ?? "UndefinedText".localized))
-                let nameText = "MovieNameTitle".localized + (movie.name ?? "UndefinedText".localized)
-                self.nameLabel.text = nameText
-                let overviewText = "MovieOverviewTitle".localized + (movie.overview ?? "UndefinedText".localized)
-                self.overviewLabel.text = overviewText
-                let firstAirDateText = "MovieFirstAirDateTitle".localized + (movie.firstAirDate ?? "UndefinedText".localized)
-                self.firstAirDateLabel.text = firstAirDateText
-                let ratingText = "MovieRatingTitle".localized + "\(movie.rating ?? 0)"
-                self.ratingLabel.text = ratingText
-            }
-            .disposed(by: disposeBag)
+        guard let viewModel = viewModel else { return }
+        posterImageView.sd_setImage(with: URL(string: viewModel.getMovie().posterPath ?? "UndefinedText".localized))
+        nameLabel.text = "MovieNameTitle".localized + (viewModel.getMovie().name ?? "UndefinedText".localized)
+        overviewLabel.text = "MovieOverviewTitle".localized + (viewModel.getMovie().overview ?? "UndefinedText".localized)
+        firstAirDateLabel.text = "MovieFirstAirDateTitle".localized + (viewModel.getMovie().firstAirDate ?? "UndefinedText".localized)
+        ratingLabel.text = "MovieRatingTitle".localized + "\(viewModel.getMovie().rating ?? 0)"
     }
     
     private func setupScrollableStackView() {
         scrollableStackView = ScrollableStackView(frame: .zero, itemSpacing: 20)
-        view.addSubview(scrollableStackView)
+        mainView.addSubview(scrollableStackView)
         scrollableStackView.snp.makeConstraints { view in
             view.top.left.equalToSuperview().offset(20)
             view.right.bottom.equalToSuperview().offset(-20)

@@ -39,7 +39,7 @@ final class MovieListViewModel: BaseViewModel, BaseViewModelType {
         return Output(movieListObservable: movieListSubject.asObservable())
     }
     
-    func getPopularMovieListData() {
+    private func getPopularMovieListData() {
         guard let url = MovieAPI.shared.getPopularMovieURLString(pageId: pageNumber) else { return }
         NetworkManager.shared.request(url: url, method: .get)
             .subscribe { [weak self] (event: Result<MovieListModel, Error>) in
@@ -69,7 +69,7 @@ final class MovieListViewModel: BaseViewModel, BaseViewModelType {
         movieListSubject.onNext(movieList)
     }
     
-    func increasePageCount() {
+    func increasePageNumber() {
         pageNumber += 1
     }
     
