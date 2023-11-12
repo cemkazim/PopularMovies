@@ -8,6 +8,8 @@
 import UIKit
 import SnapKit
 import SDWebImage
+import RxSwift
+import RxRelay
 
 final class MovieDetailViewController: BaseViewController<MovieDetailViewModel> {
     
@@ -20,6 +22,7 @@ final class MovieDetailViewController: BaseViewController<MovieDetailViewModel> 
     private var overviewLabel: UILabel!
     private var firstAirDateLabel: UILabel!
     private var ratingLabel: UILabel!
+    private var disposeBag = DisposeBag()
     
     // MARK: - Lifecycle
     
@@ -40,16 +43,23 @@ final class MovieDetailViewController: BaseViewController<MovieDetailViewModel> 
         setupLabelStackView()
     }
     
-    override func bindData() {
-        posterImageView.sd_setImage(with: URL(string: viewModel.movie.posterPath ?? ""))
-        let nameText = "MovieNameTitle".localized + (viewModel.movie.name ?? "")
-        nameLabel.text = nameText
-        let overviewText = "MovieOverviewTitle".localized + (viewModel.movie.overview ?? "")
-        overviewLabel.text = overviewText
-        let firstAirDateText = "MovieFirstAirDateTitle".localized + (viewModel.movie.firstAirDate ?? "")
-        firstAirDateLabel.text = firstAirDateText
-        let ratingText = "MovieRatingTitle".localized + "\(viewModel.movie.rating ?? 0)"
-        ratingLabel.text = ratingText
+    override func bindViewModel() {
+        let movieDetailSubject = BehaviorRelay<MovieDetailModel>(value: MovieDetailModel())
+        let output = viewModel.transform(input: MovieDetailViewModel.Input(movieDetailSubject: movieDetailSubject))
+        output.movieDetailObservable
+            .subscribe { [weak self] movie in
+                guard let self = self else { return }
+                self.posterImageView.sd_setImage(with: URL(string: movie.posterPath ?? "UndefinedText".localized))
+                let nameText = "MovieNameTitle".localized + (movie.name ?? "UndefinedText".localized)
+                self.nameLabel.text = nameText
+                let overviewText = "MovieOverviewTitle".localized + (movie.overview ?? "UndefinedText".localized)
+                self.overviewLabel.text = overviewText
+                let firstAirDateText = "MovieFirstAirDateTitle".localized + (movie.firstAirDate ?? "UndefinedText".localized)
+                self.firstAirDateLabel.text = firstAirDateText
+                let ratingText = "MovieRatingTitle".localized + "\(movie.rating ?? 0)"
+                self.ratingLabel.text = ratingText
+            }
+            .disposed(by: disposeBag)
     }
     
     private func setupScrollableStackView() {

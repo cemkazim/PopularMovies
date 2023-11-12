@@ -38,17 +38,17 @@ final class MovieListViewController: BaseViewController<MovieListViewModel> {
                                    forCellReuseIdentifier: MovieListTableViewCell.cellID)
     }
     
-    override func bindData() {
-        viewModel.getPopularMovieListData()
-        viewModel.movieListSubject
-            .asObservable()
+    override func bindViewModel() {
+        let fetchListSubject = BehaviorRelay<()>(value: ())
+        let output = viewModel.transform(input: MovieListViewModel.Input(fetchMovieListTrigger: fetchListSubject))
+        output.movieListObservable
             .bind(to: movieListTableView.rx.items(cellIdentifier: MovieListTableViewCell.cellID,
                                                   cellType: MovieListTableViewCell.self)) { index, element, cell in
                 let viewModel = MovieListTableViewCellViewModel(movie: element)
                 cell.bindData(viewModel: viewModel)
             }
             .disposed(by: disposeBag)
-        Observable.combineLatest(movieListTableView.rx.itemSelected, viewModel.movieListSubject.asObservable())
+        Observable.combineLatest(movieListTableView.rx.itemSelected, output.movieListObservable)
             .subscribe(onNext: { [weak self] (indexPath, movies: [MovieDetailModel]) in
                 guard let self = self else { return }
                 let movieDetailViewModel = MovieDetailViewModel(movie: movies[indexPath.row])
@@ -56,13 +56,13 @@ final class MovieListViewController: BaseViewController<MovieListViewModel> {
                 self.navigationController?.pushViewController(movieDetailViewController, animated: true)
             })
             .disposed(by: disposeBag)
-        Observable.combineLatest(movieListTableView.rx.willDisplayCell, viewModel.movieListSubject.asObservable())
+        Observable.combineLatest(movieListTableView.rx.willDisplayCell, output.movieListObservable)
             .subscribe { [weak self] (cellData, movies: [MovieDetailModel]) in
                 guard let self = self else { return }
                 if movies.count == self.viewModel.getPageItemCount() * self.viewModel.getCurrentPageNumber() {
                     if cellData.indexPath.row == movies.count - 1 {
                         self.viewModel.increasePageCount()
-                        self.viewModel.getPopularMovieListData()
+                        fetchListSubject.accept(())
                     }
                 }
             }

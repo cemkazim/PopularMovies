@@ -29,7 +29,7 @@ class BaseViewController<T: BaseViewModel>: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
-        bindData()
+        bindViewModel()
     }
     
     // MARK: - Methods
@@ -40,5 +40,5 @@ class BaseViewController<T: BaseViewModel>: UIViewController {
     }
     
     /// Description: Bind view model data after the view is created.
-    func bindData() {}
+    func bindViewModel() {}
 }

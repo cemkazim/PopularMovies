@@ -6,17 +6,38 @@
 //
 
 import RxSwift
+import RxRelay
 
-final class MovieListViewModel: BaseViewModel {
+final class MovieListViewModel: BaseViewModel, BaseViewModelType {
+    
+    // MARK: - Bindings
+    
+    struct Input {
+        let fetchMovieListTrigger: BehaviorRelay<()>
+    }
+
+    struct Output {
+        let movieListObservable: Observable<[MovieDetailModel]>
+    }
     
     // MARK: - Properties
     
     private var pageNumber = 1
     private var movieList: [MovieDetailModel] = []
-    var movieListSubject = PublishSubject<[MovieDetailModel]>()
+    private var movieListSubject = PublishSubject<[MovieDetailModel]>()
     private let disposeBag = DisposeBag()
     
     // MARK: - Methods
+    
+    func transform(input: Input) -> Output {
+        input.fetchMovieListTrigger
+            .subscribe { [weak self] _ in
+                guard let self = self else { return }
+                self.getPopularMovieListData()
+            }
+            .disposed(by: disposeBag)
+        return Output(movieListObservable: movieListSubject.asObservable())
+    }
     
     func getPopularMovieListData() {
         guard let url = MovieAPI.shared.getPopularMovieURLString(pageId: pageNumber) else { return }
