@@ -15,8 +15,8 @@ class MovieListTableViewCell: BaseTableViewCell {
     // MARK: - Properties
     
     private var movieImageView: UIImageView!
-    private var movieNameLabel: UILabel!
-    private var movieRatingLabel: UILabel!
+    private var movieNameLabel = CommonLabel(style: .title)
+    private var movieRatingLabel = CommonLabel(style: .content)
     private let disposeBag = DisposeBag()
     
     // MARK: - Methods
@@ -64,11 +64,6 @@ class MovieListTableViewCell: BaseTableViewCell {
     }
     
     private func setupMovieNameLabel() {
-        movieNameLabel = UILabel()
-        movieNameLabel.font = UIFont.systemFont(ofSize: 16)
-        movieNameLabel.textColor = .black
-        movieNameLabel.textAlignment = .center
-        movieNameLabel.numberOfLines = .zero
         contentView.addSubview(movieNameLabel)
         movieNameLabel.snp.makeConstraints { view in
             view.top.equalTo(movieImageView.snp.bottom).offset(20)
@@ -78,11 +73,7 @@ class MovieListTableViewCell: BaseTableViewCell {
     }
     
     private func setupMovieRatingLabel() {
-        movieRatingLabel = UILabel()
-        movieRatingLabel.font = UIFont.systemFont(ofSize: 16)
-        movieRatingLabel.textColor = .black
         movieRatingLabel.textAlignment = .center
-        movieRatingLabel.numberOfLines = .zero
         contentView.addSubview(movieRatingLabel)
         movieRatingLabel.snp.makeConstraints { view in
             view.top.equalTo(movieNameLabel.snp.bottom).offset(20)

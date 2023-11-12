@@ -16,10 +16,9 @@ final class MovieDetailViewController: BaseViewController<MovieDetailViewModel> 
     private var scrollableStackView: ScrollableStackView!
     private var labelStackView: UIStackView!
     private var posterImageView: UIImageView!
-    private var nameLabel: UILabel!
-    private var overviewLabel: UILabel!
-    private var firstAirDateLabel: UILabel!
-    private var ratingLabel: UILabel!
+    private var overviewLabel = CommonLabel(style: .normal)
+    private var firstAirDateLabel = CommonLabel(style: .content)
+    private var ratingLabel = CommonLabel(style: .content)
     
     // MARK: - Lifecycle
     
@@ -33,20 +32,21 @@ final class MovieDetailViewController: BaseViewController<MovieDetailViewModel> 
         super.setupView()
         setupScrollableStackView()
         setupPosterImageView()
-        setupNameLabel()
-        setupOverviewLabel()
-        setupFirstAirDateLabel()
-        setupRatingLabel()
         setupLabelStackView()
     }
     
     override func bindViewModel() {
         guard let viewModel = viewModel else { return }
-        posterImageView.sd_setImage(with: URL(string: viewModel.getMovie().posterPath ?? "UndefinedText".localized))
-        nameLabel.text = "MovieNameTitle".localized + (viewModel.getMovie().name ?? "UndefinedText".localized)
-        overviewLabel.text = "MovieOverviewTitle".localized + (viewModel.getMovie().overview ?? "UndefinedText".localized)
-        firstAirDateLabel.text = "MovieFirstAirDateTitle".localized + (viewModel.getMovie().firstAirDate ?? "UndefinedText".localized)
-        ratingLabel.text = "MovieRatingTitle".localized + "\(viewModel.getMovie().rating ?? 0)"
+        posterImageView.sd_setImage(with: URL(string: viewModel.getMovie().posterPath ?? ""))
+        navigationItem.title = viewModel.getMovie().name ?? ""
+        overviewLabel.text = viewModel.getMovie().overview ?? ""
+        if let firstAirDate = (viewModel.getMovie().firstAirDate ?? "").convertStringToDate(format: serverDateFormat) {
+            let dateString = firstAirDate.convertDateToString(format: localizeDateFormat)
+            firstAirDateLabel.text = "MovieFirstAirDateTitle".localized + dateString
+        } else {
+            firstAirDateLabel.text = "MovieFirstAirDateTitle".localized + "Undefined".localized
+        }
+        ratingLabel.text = "MovieRatingTitle".localized + "\(viewModel.getMovie().rating ?? 0)" + "/10"
     }
     
     private func setupScrollableStackView() {
@@ -66,48 +66,12 @@ final class MovieDetailViewController: BaseViewController<MovieDetailViewModel> 
         scrollableStackView.addViewToStackView(posterImageView)
         posterImageView.snp.makeConstraints { view in
             view.centerX.equalToSuperview()
-            view.height.equalTo(250)
+            view.height.equalTo(400.handleSmallScreen)
         }
     }
     
-    private func setupNameLabel() {
-        nameLabel = UILabel()
-        nameLabel.font = UIFont.systemFont(ofSize: 16)
-        nameLabel.textColor = .black
-        nameLabel.numberOfLines = .zero
-        nameLabel.textColor = .black
-        nameLabel.textAlignment = .center
-    }
-
-    private func setupOverviewLabel() {
-        overviewLabel = UILabel()
-        overviewLabel.font = UIFont.systemFont(ofSize: 16)
-        overviewLabel.textColor = .black
-        overviewLabel.numberOfLines = .zero
-        overviewLabel.textColor = .black
-        overviewLabel.textAlignment = .center
-    }
-
-    private func setupFirstAirDateLabel() {
-        firstAirDateLabel = UILabel()
-        firstAirDateLabel.font = UIFont.systemFont(ofSize: 16)
-        firstAirDateLabel.textColor = .black
-        firstAirDateLabel.numberOfLines = .zero
-        firstAirDateLabel.textColor = .black
-        firstAirDateLabel.textAlignment = .center
-    }
-
-    private func setupRatingLabel() {
-        ratingLabel = UILabel()
-        ratingLabel.font = UIFont.systemFont(ofSize: 16)
-        ratingLabel.textColor = .black
-        ratingLabel.numberOfLines = .zero
-        ratingLabel.textColor = .black
-        ratingLabel.textAlignment = .center
-    }
-    
     private func setupLabelStackView() {
-        labelStackView = UIStackView(arrangedSubviews: [nameLabel, overviewLabel, firstAirDateLabel, ratingLabel])
+        labelStackView = UIStackView(arrangedSubviews: [overviewLabel, firstAirDateLabel, ratingLabel])
         labelStackView.spacing = 20
         labelStackView.translatesAutoresizingMaskIntoConstraints = false
         labelStackView.axis = .vertical
