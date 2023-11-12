@@ -11,3 +11,6 @@ let apiKey = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5YTZiMDEwNDE0M2QzNDFhMDc5NTcxZTA2N
 let imageBaseURL = "https://image.tmdb.org/t/p/w200"
 let screenHeight = UIScreen.main.bounds.height
 let screenWidth = UIScreen.main.bounds.width
+let serverDateFormat = "YYYY-dd-MM"
+let localizeDateFormat = "dd MMMM YYYY"
+let isSmallScreen = screenHeight <= 812

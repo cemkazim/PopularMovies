@@ -6,8 +6,7 @@
   
 */
 
-"MovieNameTitle" = "Movie Name: ";
-"MovieOverviewTitle" = "Overview:\n";
+"MovieListNavigationBarTitle" = "Popular Movies";
 "MovieFirstAirDateTitle" = "First Air Date: ";
 "MovieRatingTitle" = "Rating: ";
 "UndefinedText" = "Undefined";

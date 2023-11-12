@@ -38,6 +38,10 @@ class BaseViewController<T: BaseViewModel>: UIViewController {
     
     /// Description: Perform all view setup operations.
     func setupView() {
+        navigationController?.navigationBar.tintColor = .black
+        let backButton = UIBarButtonItem()
+        backButton.title = ""
+        self.navigationController?.navigationBar.topItem?.backBarButtonItem = backButton
         mainView = UIView()
         mainView.backgroundColor = .white
         view.addSubview(mainView)

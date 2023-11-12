@@ -18,9 +18,8 @@ class MovieListTableViewCellViewModel {
     // MARK: - Initializers
     
     init(movie: MovieDetailModel) {
-        let nameText = "MovieNameTitle".localized + (movie.name ?? "")
-        movieNameSubject.accept(nameText)
-        let ratingText = "MovieRatingTitle".localized + "\(movie.rating ?? 0)"
+        movieNameSubject.accept(movie.name ?? "")
+        let ratingText = "MovieRatingTitle".localized + "\(movie.rating ?? 0)" + "/10"
         movieRatingSubject.accept(ratingText)
         let imageURL = URL(string: movie.posterPath ?? "")
         movieImageURLSubject.accept(imageURL)
