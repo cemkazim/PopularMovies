@@ -8,6 +8,7 @@
 import UIKit
 import SDWebImage
 import SnapKit
+import RxSwift
 
 class MovieListTableViewCell: BaseTableViewCell {
     
@@ -16,17 +17,7 @@ class MovieListTableViewCell: BaseTableViewCell {
     private var movieImageView: UIImageView!
     private var movieNameLabel: UILabel!
     private var movieRatingLabel: UILabel!
-    
-    // MARK: - Initializers
-    
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        setupView()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+    private let disposeBag = DisposeBag()
     
     // MARK: - Methods
     
@@ -37,8 +28,30 @@ class MovieListTableViewCell: BaseTableViewCell {
         movieRatingLabel.text = nil
     }
     
-    private func setupView() {
+    override func setupView() {
         selectionStyle = .none
+        setupMovieImageView()
+        setupMovieNameLabel()
+        setupMovieRatingLabel()
+    }
+    
+    func bindData(viewModel: MovieListTableViewCellViewModel) {
+        viewModel.movieNameSubject
+            .bind(to: movieNameLabel.rx.text)
+            .disposed(by: disposeBag)
+        viewModel.movieRatingSubject
+            .bind(to: movieRatingLabel.rx.text)
+            .disposed(by: disposeBag)
+        viewModel.movieImageURLSubject
+            .subscribe(onNext: { [weak self] imageURL in
+                guard let self = self else { return }
+                self.movieImageView.sd_imageIndicator = SDWebImageActivityIndicator.grayLarge
+                self.movieImageView.sd_setImage(with: imageURL)
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    private func setupMovieImageView() {
         movieImageView = UIImageView()
         movieImageView.contentMode = .scaleAspectFit
         contentView.addSubview(movieImageView)
@@ -48,6 +61,9 @@ class MovieListTableViewCell: BaseTableViewCell {
             view.width.equalTo(150)
             view.height.equalTo(225)
         }
+    }
+    
+    private func setupMovieNameLabel() {
         movieNameLabel = UILabel()
         movieNameLabel.font = UIFont.systemFont(ofSize: 16)
         movieNameLabel.textColor = .black
@@ -59,6 +75,9 @@ class MovieListTableViewCell: BaseTableViewCell {
             view.left.equalToSuperview().offset(20)
             view.right.equalToSuperview().offset(-20)
         }
+    }
+    
+    private func setupMovieRatingLabel() {
         movieRatingLabel = UILabel()
         movieRatingLabel.font = UIFont.systemFont(ofSize: 16)
         movieRatingLabel.textColor = .black
@@ -70,14 +89,5 @@ class MovieListTableViewCell: BaseTableViewCell {
             view.left.equalToSuperview().offset(20)
             view.right.bottom.equalToSuperview().offset(-20)
         }
-    }
-    
-    func updateUI(with movie: MovieDetailModel) {
-        let nameText = "MovieNameTitle".localized + (movie.name ?? "")
-        movieNameLabel.text = nameText
-        let ratingText = "MovieRatingTitle".localized + "\(movie.rating ?? 0)"
-        movieRatingLabel.text = ratingText
-        movieImageView.sd_imageIndicator = SDWebImageActivityIndicator.grayLarge
-        movieImageView.sd_setImage(with: URL(string: movie.posterPath ?? ""))
     }
 }

@@ -12,13 +12,9 @@ final class MovieListViewModel: BaseViewModel {
     // MARK: - Properties
     
     private var pageNumber = 1
-    private var pageItemCount = 20
     private var movieList: [MovieDetailModel] = []
-    private var movieListSubject = PublishSubject<[MovieDetailModel]>()
-    var movieListObservable: Observable<[MovieDetailModel]> {
-        return movieListSubject.asObservable()
-    }
-    private var disposeBag = DisposeBag()
+    var movieListSubject = PublishSubject<[MovieDetailModel]>()
+    private let disposeBag = DisposeBag()
     
     // MARK: - Methods
     
@@ -61,6 +57,6 @@ final class MovieListViewModel: BaseViewModel {
     }
     
     func getPageItemCount() -> Int {
-        return pageItemCount
+        return 20
     }
 }

@@ -28,14 +28,17 @@ class BaseViewController<T: BaseViewModel>: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
         setupView()
-        bindViewModel()
+        bindData()
     }
     
     // MARK: - Methods
     
-    func setupView() {}
+    /// Description: Perform all view setup operations.
+    func setupView() {
+        view.backgroundColor = .white
+    }
     
-    func bindViewModel() {}
+    /// Description: Bind view model data after the view is created.
+    func bindData() {}
 }

@@ -15,11 +15,18 @@ final class MovieListViewController: BaseViewController<MovieListViewModel> {
     // MARK: - Properties
     
     private var movieListTableView: DynamicTableView!
-    private var disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
+    
+    // MARK: - Lifecycle
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+    }
     
     // MARK: - Methods
     
     override func setupView() {
+        super.setupView()
         movieListTableView = DynamicTableView(frame: .zero, style: .plain)
         movieListTableView.separatorStyle = .none
         movieListTableView.backgroundColor = .clear
@@ -31,15 +38,17 @@ final class MovieListViewController: BaseViewController<MovieListViewModel> {
                                    forCellReuseIdentifier: MovieListTableViewCell.cellID)
     }
     
-    override func bindViewModel() {
+    override func bindData() {
         viewModel.getPopularMovieListData()
-        viewModel.movieListObservable
+        viewModel.movieListSubject
+            .asObservable()
             .bind(to: movieListTableView.rx.items(cellIdentifier: MovieListTableViewCell.cellID,
                                                   cellType: MovieListTableViewCell.self)) { index, element, cell in
-                cell.updateUI(with: element)
+                let viewModel = MovieListTableViewCellViewModel(movie: element)
+                cell.bindData(viewModel: viewModel)
             }
             .disposed(by: disposeBag)
-        Observable.combineLatest(movieListTableView.rx.itemSelected, viewModel.movieListObservable)
+        Observable.combineLatest(movieListTableView.rx.itemSelected, viewModel.movieListSubject.asObservable())
             .subscribe(onNext: { [weak self] (indexPath, movies: [MovieDetailModel]) in
                 guard let self = self else { return }
                 let movieDetailViewModel = MovieDetailViewModel(movie: movies[indexPath.row])
@@ -47,7 +56,7 @@ final class MovieListViewController: BaseViewController<MovieListViewModel> {
                 self.navigationController?.pushViewController(movieDetailViewController, animated: true)
             })
             .disposed(by: disposeBag)
-        Observable.combineLatest(movieListTableView.rx.willDisplayCell, viewModel.movieListObservable)
+        Observable.combineLatest(movieListTableView.rx.willDisplayCell, viewModel.movieListSubject.asObservable())
             .subscribe { [weak self] (cellData, movies: [MovieDetailModel]) in
                 guard let self = self else { return }
                 if movies.count == self.viewModel.getPageItemCount() * self.viewModel.getCurrentPageNumber() {

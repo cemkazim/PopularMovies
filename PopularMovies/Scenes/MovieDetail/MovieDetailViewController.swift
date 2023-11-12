@@ -21,9 +21,16 @@ final class MovieDetailViewController: BaseViewController<MovieDetailViewModel> 
     private var firstAirDateLabel: UILabel!
     private var ratingLabel: UILabel!
     
+    // MARK: - Lifecycle
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+    }
+    
     // MARK: - Methods
     
     override func setupView() {
+        super.setupView()
         setupScrollableStackView()
         setupPosterImageView()
         setupNameLabel()
@@ -33,7 +40,7 @@ final class MovieDetailViewController: BaseViewController<MovieDetailViewModel> 
         setupLabelStackView()
     }
     
-    override func bindViewModel() {
+    override func bindData() {
         posterImageView.sd_setImage(with: URL(string: viewModel.movie.posterPath ?? ""))
         let nameText = "MovieNameTitle".localized + (viewModel.movie.name ?? "")
         nameLabel.text = nameText
