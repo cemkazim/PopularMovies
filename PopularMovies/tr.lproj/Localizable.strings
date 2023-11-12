@@ -6,8 +6,7 @@
   
 */
 
-"MovieNameTitle" = "Film Adı: ";
-"MovieOverviewTitle" = "Genel Bakış:\n";
+"MovieListNavigationBarTitle" = "Popüler Filmler";
 "MovieFirstAirDateTitle" = "İlk Yayın Tarihi: ";
 "MovieRatingTitle" = "Derecelendirme: ";
 "UndefinedText" = "Tanımlanmamış";

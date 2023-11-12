@@ -12,6 +12,10 @@
 		E721CD1F2B0006AA00932DA6 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E721CD212B0006AA00932DA6 /* Localizable.strings */; };
 		E721CD242B0030B300932DA6 /* BaseViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E721CD232B0030B300932DA6 /* BaseViewModel.swift */; };
 		E721CD262B003EB200932DA6 /* MovieListTableViewCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E721CD252B003EB200932DA6 /* MovieListTableViewCellViewModel.swift */; };
+		E721CD2F2B00FAEB00932DA6 /* DateExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E721CD2E2B00FAEB00932DA6 /* DateExtensions.swift */; };
+		E721CD322B00FD8600932DA6 /* FontManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E721CD312B00FD8600932DA6 /* FontManager.swift */; };
+		E721CD342B00FE4700932DA6 /* CommonLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E721CD332B00FE4700932DA6 /* CommonLabel.swift */; };
+		E721CD362B01022200932DA6 /* DoubleExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E721CD352B01022200932DA6 /* DoubleExtensions.swift */; };
 		E7F35AF92AFFA79C00E47520 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F35AF82AFFA79C00E47520 /* AppDelegate.swift */; };
 		E7F35AFB2AFFA79C00E47520 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F35AFA2AFFA79C00E47520 /* SceneDelegate.swift */; };
 		E7F35AFD2AFFA79C00E47520 /* MovieListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F35AFC2AFFA79C00E47520 /* MovieListViewController.swift */; };
@@ -40,6 +44,10 @@
 		E721CD222B0006B300932DA6 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E721CD232B0030B300932DA6 /* BaseViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewModel.swift; sourceTree = "<group>"; };
 		E721CD252B003EB200932DA6 /* MovieListTableViewCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieListTableViewCellViewModel.swift; sourceTree = "<group>"; };
+		E721CD2E2B00FAEB00932DA6 /* DateExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtensions.swift; sourceTree = "<group>"; };
+		E721CD312B00FD8600932DA6 /* FontManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontManager.swift; sourceTree = "<group>"; };
+		E721CD332B00FE4700932DA6 /* CommonLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonLabel.swift; sourceTree = "<group>"; };
+		E721CD352B01022200932DA6 /* DoubleExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoubleExtensions.swift; sourceTree = "<group>"; };
 		E7F35AF52AFFA79C00E47520 /* PopularMovies.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PopularMovies.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E7F35AF82AFFA79C00E47520 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E7F35AFA2AFFA79C00E47520 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -86,6 +94,7 @@
 			children = (
 				E7F35B2D2AFFC82E00E47520 /* DynamicTableView.swift */,
 				E721CD132B00018C00932DA6 /* ScrollableStackView.swift */,
+				E721CD332B00FE4700932DA6 /* CommonLabel.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -213,6 +222,7 @@
 			isa = PBXGroup;
 			children = (
 				E7F35B282AFFC4BB00E47520 /* Constants.swift */,
+				E721CD312B00FD8600932DA6 /* FontManager.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -221,6 +231,8 @@
 			isa = PBXGroup;
 			children = (
 				E7F35B302AFFCD8F00E47520 /* StringExtensions.swift */,
+				E721CD2E2B00FAEB00932DA6 /* DateExtensions.swift */,
+				E721CD352B01022200932DA6 /* DoubleExtensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -342,6 +354,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				E7F35B272AFFC04200E47520 /* BaseViewController.swift in Sources */,
+				E721CD2F2B00FAEB00932DA6 /* DateExtensions.swift in Sources */,
+				E721CD342B00FE4700932DA6 /* CommonLabel.swift in Sources */,
 				E7F35B112AFFA91F00E47520 /* MovieDetailViewController.swift in Sources */,
 				E721CD242B0030B300932DA6 /* BaseViewModel.swift in Sources */,
 				E7F35B202AFFB1FC00E47520 /* MovieListTableViewCell.swift in Sources */,
@@ -349,7 +363,9 @@
 				E7F35B152AFFA93F00E47520 /* MovieDetailViewModel.swift in Sources */,
 				E7F35B232AFFB4B000E47520 /* BaseTableViewCell.swift in Sources */,
 				E7F35B172AFFA96100E47520 /* NetworkManager.swift in Sources */,
+				E721CD362B01022200932DA6 /* DoubleExtensions.swift in Sources */,
 				E7F35B2E2AFFC82E00E47520 /* DynamicTableView.swift in Sources */,
+				E721CD322B00FD8600932DA6 /* FontManager.swift in Sources */,
 				E721CD142B00018C00932DA6 /* ScrollableStackView.swift in Sources */,
 				E7F35B192AFFAA4100E47520 /* MovieAPI.swift in Sources */,
 				E7F35AF92AFFA79C00E47520 /* AppDelegate.swift in Sources */,

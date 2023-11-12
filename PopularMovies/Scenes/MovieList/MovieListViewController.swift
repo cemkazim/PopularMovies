@@ -27,6 +27,7 @@ final class MovieListViewController: BaseViewController<MovieListViewModel> {
     
     override func setupView() {
         super.setupView()
+        navigationItem.title = "MovieListNavigationBarTitle".localized
         movieListTableView = DynamicTableView(frame: .zero, style: .plain)
         movieListTableView.separatorStyle = .none
         movieListTableView.backgroundColor = .clear
