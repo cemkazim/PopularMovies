@@ -5,7 +5,7 @@
 //  Created by Cem Kazım on 11.11.2023.
 //
 
-import Foundation
+import RxRelay
 
 final class MovieDetailViewModel: BaseViewModel {
     
